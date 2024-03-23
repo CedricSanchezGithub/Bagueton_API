@@ -4,7 +4,7 @@ Ceci est le backend de l'application Bagueton, une application Android d'outils 
 
 ## À propos
 
-Ceci est la seconde partie de mon projet d'étude "Bagueton" servant de projet d'étude pour le diplôme DWWM Bac +2.
+Bagueton API est la seconde partie de mon projet d'étude "Bagueton" servant de projet d'étude pour le diplôme DWWM Bac +2.
 
 ## Fonctionnalités
 
