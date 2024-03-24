@@ -1,5 +1,5 @@
-/*
 package org.bagueton_api.model
+/*
 
 import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository

@@ -1,4 +1,5 @@
 package org.bagueton_api.apirest
+/*
 
 import org.bagueton_api.model.RecipeBean
 import org.bagueton_api.model.UserBean
@@ -19,3 +20,4 @@ class UserManagement (val userService: UserService){
         userService.createUser(username = username, password = password)
     }
 }
+*/
