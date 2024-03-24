@@ -1,3 +1,4 @@
+/*
 package org.bagueton_api.apirest
 
 import org.bagueton_api.model.RecipeBean
@@ -26,3 +27,4 @@ class RecipeAPI (val recipeService: RecipeService) {
 }
 
 
+*/
