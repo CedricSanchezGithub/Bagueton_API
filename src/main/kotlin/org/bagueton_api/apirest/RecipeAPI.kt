@@ -16,7 +16,7 @@ class RecipeAPI (val recipeService: RecipeService) {
     // Endpoint pour créer une nouvelle recette. Les données de la recette sont reçues dans le corps de la requête.
     @PostMapping("/createrecipe")
     fun createRecipe(@RequestBody recipe: RecipeBean) {
-        recipeService.createRecipe(title = recipe.title, image = recipe.image, ingredients = recipe.ingredients, steps = recipe.steps)
+        recipe.title?.let { recipeService.createRecipe(name = it, steps = recipe.steps, ingredients = recipe.ingredients) }
     }
 
     // Endpoint pour récupérer toutes les recettes disponibles.

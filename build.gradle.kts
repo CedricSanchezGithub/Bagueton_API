@@ -33,6 +33,9 @@ dependencies {
 
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    //Permet l'encryptage des passwords
+    implementation("org.mindrot:jbcrypt:+")
 }
 
 tasks.withType<KotlinCompile> {
