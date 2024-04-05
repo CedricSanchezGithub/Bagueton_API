@@ -14,13 +14,14 @@ import org.springframework.stereotype.Service
 data class RecipeBean(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id_recipe: Long? = null,
     val title: String? = null,
-    val image: String? = "R.drawable.logo",
-    val ingredients: String? = "liste d'ingrédients vide",
+    val image: String? = "http://2.9.163.31:8081/logo.png",
+    val ingredients: String? = "",
     @Column(length = 10000)
-    val steps: String? = "liste d'étape vide"
+    val steps: String? = ""
 )
+
 
 
 /*
@@ -43,8 +44,8 @@ data class Ingredient(
 
 
 // Repository pour accéder aux opérations de base de données des recettes.
-@Repository
-interface RecipeRepository : JpaRepository<RecipeBean, Long>
+
+@Repository interface RecipeRepository : JpaRepository<RecipeBean, Long>
 
 /*
 Repository pour accéder aux opérations de base de données des ingrédients.
@@ -52,11 +53,12 @@ Repository pour accéder aux opérations de base de données des ingrédients.
 interface IngredientRepository : JpaRepository<Ingredient, Long>
 */
 
-// Service gérant la logique métier des recettes, notamment la création et la récupération de recettes.
+// Service gérant la logique métier de la création de recettes.
 @Service
-class RecipeService(val recipeRepository: RecipeRepository) { // Assurez-vous d'avoir un repository pour les ingrédients
+class RecipeService(val recipeRepository: RecipeRepository) {
 
-    fun createRecipe(name: String, steps: String?, ingredients: String?) { // steps est maintenant une String
+
+    fun createRecipe(name: String, steps: String?, ingredients: String?) {
         if (name.isNullOrBlank()) {
             throw Exception("Le titre de la recette est obligatoire.")
         }
@@ -65,7 +67,6 @@ class RecipeService(val recipeRepository: RecipeRepository) { // Assurez-vous d'
         println("Sauvegarde de la recette suivante: ${recipe.title}")
         recipeRepository.save(recipe)
     }
-
 
     // Récupère toutes les recettes disponibles dans la base de données.
     fun findAllRecipes(): MutableList<RecipeBean> = recipeRepository.findAll()
