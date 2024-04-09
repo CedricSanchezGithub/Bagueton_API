@@ -70,5 +70,7 @@ class RecipeService(val recipeRepository: RecipeRepository) {
 
     // Récupère toutes les recettes disponibles dans la base de données.
     fun findAllRecipes(): MutableList<RecipeBean> = recipeRepository.findAll()
+
+    fun deleteRecipe(id : Long) = recipeRepository.deleteById(id)
 }
 
