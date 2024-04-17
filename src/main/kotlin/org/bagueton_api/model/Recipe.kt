@@ -1,6 +1,7 @@
 package org.bagueton_api.model
 
 import jakarta.persistence.*
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -15,51 +16,27 @@ data class RecipeBean(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id_recipe: Long? = null,
-    val title: String? = null,
-    val image: String? = "http://2.9.163.31:8081/logo.png",
-    val ingredients: String? = "",
+    var title: String? = null,
+    var image: String? = "http://90.51.140.217:8081//logo.png",
+    var ingredients: String? = "",
     @Column(length = 10000)
-    val steps: String? = ""
+    var steps: String? = ""
 )
-
-
-
-/*
-// Entité représentant une recette, incluant un titre, une image, une liste d'ingrédients
-// et des étapes de préparation.
-@Entity
-@Table(name = "bagueton_ingredients")
-data class Ingredient(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
-    val name: String? = null,
-    val quantity: Double? = null,
-    val unit: String? = null,
-    @ManyToOne // Chaque ingrédient appartient à une recette
-    @JoinColumn(name = "recipe_id") // Crée une colonne de clé étrangère dans 'ingredient' pointant vers 'recipe'
-    var recipe: RecipeBean? = null
-)
-*/
-
 
 // Repository pour accéder aux opérations de base de données des recettes.
-
 @Repository interface RecipeRepository : JpaRepository<RecipeBean, Long>
-
-/*
-Repository pour accéder aux opérations de base de données des ingrédients.
-@Repository
-interface IngredientRepository : JpaRepository<Ingredient, Long>
-*/
 
 // Service gérant la logique métier de la création de recettes.
 @Service
 class RecipeService(val recipeRepository: RecipeRepository) {
 
+    // Permet de vérifier qu'une id (donc une recette) existe
+    fun existsById(id: Long): Boolean = recipeRepository.existsById(id)
 
+
+    // Crée une recette avec un nomme, des étapes et des ingrédients
     fun createRecipe(name: String, steps: String?, ingredients: String?) {
-        if (name.isNullOrBlank()) {
+        if (name.isBlank()) {
             throw Exception("Le titre de la recette est obligatoire.")
         }
         // Création et sauvegarde de l'entité RecipeBean
@@ -71,6 +48,32 @@ class RecipeService(val recipeRepository: RecipeRepository) {
     // Récupère toutes les recettes disponibles dans la base de données.
     fun findAllRecipes(): MutableList<RecipeBean> = recipeRepository.findAll()
 
-    fun deleteRecipe(id : Long) = recipeRepository.deleteById(id)
+    // Supprime la recette via son id, renvoie un booléen indiquant si la suppression a été effectuée.
+    fun deleteRecipe(id: Long): Boolean {
+        if (!recipeRepository.existsById(id)) {
+            return false
+        }
+        recipeRepository.deleteById(id)
+        return true
+    }
+
+    // Met à jour la recette via son id
+    fun updateRecipe(id: Long, updatedRecipe: RecipeBean) {
+        val recipeToUpdateOptional = recipeRepository.findById(id)
+        if (recipeToUpdateOptional.isEmpty) {
+            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
+        }
+
+        val recipeToUpdate = recipeToUpdateOptional.get()
+
+        // Mise à jour des champs non nuls uniquement
+        updatedRecipe.title?.let { recipeToUpdate.title = it }
+        updatedRecipe.steps?.let { recipeToUpdate.steps = it }
+        updatedRecipe.ingredients?.let { recipeToUpdate.ingredients = it }
+
+        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
+    }
+
+
 }
 
