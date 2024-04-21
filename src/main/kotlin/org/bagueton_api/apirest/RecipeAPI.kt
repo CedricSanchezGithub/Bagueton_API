@@ -31,9 +31,11 @@ class RecipeAPI (val recipeService: RecipeService) {
     @DeleteMapping("/deleterecipe/{id}")
     fun deleteMatch(@PathVariable id: Long) : ResponseEntity<Any>  {
         if (!recipeService.existsById(id)) {
+            println("recette non trouvée pour la suppression")
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune recette trouvée pour l'ID spécifié.")
         }
         recipeService.deleteRecipe(id)
+        println("Delete recette ${id}")
         return ResponseEntity.ok("Recette $id supprimée avec succès.")
 
     }
