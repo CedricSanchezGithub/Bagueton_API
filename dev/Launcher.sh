@@ -1,5 +1,4 @@
-# lxterminal --command="bash -c 'java -jar bagueton_api.jar --server.port=8081; exec bash'" &
+#!/bin/bash
+/usr/local/bin/docker -f /home/cedric/Bagueton/Bagueton_API/dev
 
-# sleep 10
 
-docker compose up

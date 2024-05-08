@@ -29,7 +29,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     //Permet à JAVA de se connecter à une base SQL
-    runtimeOnly("com.mysql:mysql-connector-j")
 
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -38,7 +37,8 @@ dependencies {
     implementation("org.mindrot:jbcrypt:+")
 
     //Permet de charger ma base de données
-    implementation ("mysql:mysql-connector-java:8.0.19") // Vérifiez pour la dernière version disponible
+    implementation ("mysql:mysql-connector-java:8.0.19")
+
 
 }
 

@@ -1,7 +1,8 @@
 package org.bagueton_api.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
+import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -22,52 +23,175 @@ import org.springframework.stereotype.Service
 //    @Column(length = 10000)
 //    var steps: String? = ""
 //)
+
+// Fetch Lazy passé en EAGER pour tenter de régler le probleme de serialisation
+// @JsonIgnore permet de régler le probleme de serialisation
+
 @Entity
 @Table(name = "recipes")
-data class RecipeBean(
+data class RecipeEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    var id: String? = null,
     var title: String? = null,
-    var image: String = "http://90.51.140.217:8081/logo.png",
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var ingredients: Set<Ingredients> = HashSet(),
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var steps: Set<Steps> = HashSet()
-)
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var images: Set<ImagesEntity> = HashSet(),
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var ingredients: Set<IngredientsEntity> = HashSet(),
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var steps: Set<StepsEntity> = HashSet()
+) {
+    override fun equals(other: Any?): Boolean {
+        return other is StepsEntity && id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: 0
+}
+
+@Entity
+@Table(name = "images")
+data class ImagesEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: String? = null,
+    var url: String? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "recipe_id")
+    @JsonIgnore
+    var recipe: RecipeEntity? = null
+) {
+    override fun equals(other: Any?): Boolean {
+        return other is StepsEntity && id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: 0
+}
+
 
 @Entity
 @Table(name = "ingredients")
-data class Ingredients(
+data class IngredientsEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-    var name: String? = null,
-    var quantity: String? = null,  // Quantité et unité combinées pour simplifier
-    @ManyToOne(fetch = FetchType.LAZY)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: String? = null,
+    var ingredient: String? = null,
+    var quantity: Int? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipe_id")
-    var recipe: RecipeBean? = null
-)
+    @JsonIgnore
+    var recipe: RecipeEntity? = null
+){
+    override fun equals(other: Any?): Boolean {
+        return other is StepsEntity && id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: 0
+}
 
 @Entity
 @Table(name = "steps")
-data class Steps(
+data class StepsEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-    var stepNumber: Int? = null,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: String? = null,
     var description: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipe_id")
-    var recipe: RecipeBean? = null
-)
+    @JsonIgnore
+    var recipe: RecipeEntity? = null
+){
+    override fun equals(other: Any?): Boolean {
+        return other is StepsEntity && id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = id?.hashCode() ?: 0
+}
 
 // Repository pour accéder aux opérations de base de données des recettes.
-@Repository interface RecipeRepository : JpaRepository<RecipeBean, Long>
+@Repository interface RecipeEntityRepository : JpaRepository<RecipeEntity, String>
+@Repository interface ImagesEntityRepository : JpaRepository<RecipeEntity, String>
+@Repository interface IngredientsEntityRepository : JpaRepository<RecipeEntity, String>
+@Repository interface StepsEntityRepository : JpaRepository<RecipeEntity, String>
+
+
 
 // Service gérant la logique métier de la création de recettes.
 @Service
-class RecipeService(val recipeRepository: RecipeRepository) {
+class RecipeService( val recipeRepository: RecipeEntityRepository,
+                     val ingredientsRepository: IngredientsEntityRepository,
+                     val stepsRepository: StepsEntityRepository,
+                     val imagesRepository: ImagesEntityRepository) {
+
+
+
+    @Transactional
+    fun saveRecipe(recipe: RecipeEntity): RecipeEntity {
+        val newRecipe = RecipeEntity()
+        newRecipe.title = recipe.title
+
+        // Relier chaque image à la nouvelle recette
+        newRecipe.images = recipe.images.map { image ->
+            ImagesEntity(
+                url = image.url,
+                recipe = newRecipe
+            )
+        }.toSet()
+
+        // Relier chaque ingrédient à la nouvelle recette
+        newRecipe.ingredients = recipe.ingredients.map { ingredient ->
+            IngredientsEntity(
+                ingredient = ingredient.ingredient,
+                quantity = ingredient.quantity,
+                recipe = newRecipe
+            )
+        }.toSet()
+
+        // Relier chaque étape à la nouvelle recette
+        newRecipe.steps = recipe.steps.map { step ->
+            StepsEntity(
+                description = step.description,
+                recipe = newRecipe
+            )
+        }.toSet()
+
+        // Sauvegarder la nouvelle recette et ses dépendances en cascade
+        return recipeRepository.save(newRecipe)
+    }
+
+
+
+    // Permet de vérifier qu'une id (donc une recette) existe
+    fun existsById(id: String): Boolean = recipeRepository.existsById(id)
+
+// Récupère toutes les recettes disponibles dans la base de données.
+    fun findAllRecipes(): MutableList<RecipeEntity> = recipeRepository.findAll()
+}
+
+// Supprime la recette via son id, renvoie un booléen indiquant si la suppression a été effectuée.
+//    fun deleteRecipeById(id: Long) {
+//        // Vérifie si la recette existe avant de tenter de la supprimer
+//        if (recipeRepository.existsById(id)) {
+//            recipeRepository.deleteById(id)
+//        } else {
+//            throw Exception("Recette non trouvée avec l'ID: $id")
+//        }
+//    }
+
+//    // Met à jour la recette via son id
+//    fun updateRecipe(id: Long, updatedRecipe: RecipeEntity) {
+//        val recipeToUpdateOptional = recipeRepository.findById(id)
+//        if (recipeToUpdateOptional.isEmpty) {
+//            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
+//        }
+//
+//        val recipeToUpdate = recipeToUpdateOptional.get()
+//
+//        // Mise à jour des champs non nulls uniquement
+//        updatedRecipe.title?.let { recipeToUpdate.title = it }
+//
+//        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
+//    }
+//}
 
 
 
@@ -81,62 +205,3 @@ class RecipeService(val recipeRepository: RecipeRepository) {
 //        println("Sauvegarde de la recette suivante: ${recipe.title}")
 //        recipeRepository.save(recipe)
 //    }
-
-    @Service
-    class RecipeService(val recipeRepository: RecipeRepository) {
-        // Crée une recette avec un nom, des étapes et des ingrédients
-        fun createRecipe(name: String, ingredientList: List<String>, stepList: List<String>) {
-            if (name.isBlank()) {
-                throw Exception("Le titre de la recette est obligatoire.")
-            }
-
-            val ingredients = ingredientList.map {
-                Ingredients(name = it, quantity = "some quantity") // Modifiez en fonction de vos besoins
-            }.toSet()
-
-            val steps = stepList.mapIndexed { index, step ->
-                Steps(stepNumber = index + 1, description = step)
-            }.toSet()
-
-            val recipe = RecipeBean(title = name, ingredients = ingredients, steps = steps)
-
-            println("Sauvegarde de la recette suivante: ${recipe.title}")
-            recipeRepository.save(recipe)
-        }
-    }
-
-
-    // Permet de vérifier qu'une id (donc une recette) existe
-    fun existsById(id: Long): Boolean = recipeRepository.existsById(id)
-
-    // Récupère toutes les recettes disponibles dans la base de données.
-    fun findAllRecipes(): MutableList<RecipeBean> = recipeRepository.findAll()
-
-    // Supprime la recette via son id, renvoie un booléen indiquant si la suppression a été effectuée.
-    fun deleteRecipe(id: Long): Boolean {
-        if (!recipeRepository.existsById(id)) {
-            return false
-        }
-        recipeRepository.deleteById(id)
-        return true
-    }
-
-    // Met à jour la recette via son id
-    fun updateRecipe(id: Long, updatedRecipe: RecipeBean) {
-        val recipeToUpdateOptional = recipeRepository.findById(id)
-        if (recipeToUpdateOptional.isEmpty) {
-            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
-        }
-
-        val recipeToUpdate = recipeToUpdateOptional.get()
-
-        // Mise à jour des champs non nulls uniquement
-        updatedRecipe.title?.let { recipeToUpdate.title = it }
-        updatedRecipe.steps?.let { recipeToUpdate.steps = it }
-        updatedRecipe.ingredients?.let { recipeToUpdate.ingredients = it }
-
-        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
-    }
-}
-
-
