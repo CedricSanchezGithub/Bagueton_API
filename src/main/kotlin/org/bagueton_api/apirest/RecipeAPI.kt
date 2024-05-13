@@ -26,20 +26,20 @@ class RecipeAPI (val recipeService: RecipeService) {
         println("Appel de la fonction readAllRecipe")
         return recipeService.findAllRecipes()
     }
+
+    // Endpoint pour supprimer une recette précise
+
+    @DeleteMapping("/delete/{id}")
+    fun deleteRecipe(@PathVariable id: String): ResponseEntity<String> {
+        return try {
+            recipeService.deleteRecipeById(id)
+            ResponseEntity.ok("Recette supprimée avec succès avec l'ID: $id")
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message ?: "Erreur lors de la suppression de la recette")
+        }
+    }
 }
-//
-//    // Endpoint pour supprimer une recette précise
-//
-//    @DeleteMapping("/delete/{id}")
-//    fun deleteRecipe(@PathVariable id: Long): ResponseEntity<String> {
-//        return try {
-//            recipeService.deleteRecipeById(id)
-//            ResponseEntity.ok("Recette supprimée avec succès avec l'ID: $id")
-//        } catch (e: Exception) {
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message ?: "Erreur lors de la suppression de la recette")
-//        }
-//    }
-//
+
 //    // Endpoint pour modifier une recette. Les nouvelles données de la recette sont reçues dans le corps de la requête.
 //    @PatchMapping("/updaterecipe/{id}")
 //    fun updateRecipe(@PathVariable id: Long, @RequestBody recipe: RecipeEntity) : ResponseEntity<Any> {
