@@ -38,20 +38,17 @@ class RecipeAPI (val recipeService: RecipeService) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message ?: "Erreur lors de la suppression de la recette")
         }
     }
+// Endpoint pour modifier une recette. Les nouvelles données de la recette sont reçues dans le corps de la requête.
+@PatchMapping("/updaterecipe/{id}")
+fun updateRecipe(@PathVariable id: String, @RequestBody recipe: RecipeEntity) : ResponseEntity<Any> {
+    if (!recipeService.existsById(id)) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune recette trouvée pour l'ID spécifié.")
+    }
+    // Appel du service pour mettre à jour partiellement ou completement la recette
+    recipeService.updateRecipe(id, recipe)
+    return ResponseEntity.ok("Recette '${recipe.title}' mise à jour avec succès.")
+}
 }
 
-//    // Endpoint pour modifier une recette. Les nouvelles données de la recette sont reçues dans le corps de la requête.
-//    @PatchMapping("/updaterecipe/{id}")
-//    fun updateRecipe(@PathVariable id: Long, @RequestBody recipe: RecipeEntity) : ResponseEntity<Any> {
-//        if (!recipeService.existsById(id)) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune recette trouvée pour l'ID spécifié.")
-//        }
-//        // Appel du service pour mettre à jour partiellement ou completement la recette
-//        recipeService.updateRecipe(id, recipe)
-//        return ResponseEntity.ok("Recette '${recipe.title}' mise à jour avec succès.")
-//    }
-//
-//}
-//
-//
+
 

@@ -1,0 +1,22 @@
+{
+  "title": "Tourte aux Seigle",
+  "images": [
+    {"url": "http://localhost:8082/images/tourte_aux_seigle.webp"}
+  ],
+  "ingredients": [
+    {"ingredient": "Farine de seigle", "quantity": 500},
+    {"ingredient": "Eau", "quantity": 350},
+    {"ingredient": "Levure de boulanger", "quantity": 15},
+    {"ingredient": "Sel", "quantity": 10},
+    {"ingredient": "Miel", "quantity": 30}
+  ],
+  "steps": [
+    {"description": "Mélanger la farine de seigle et le sel dans un grand bol."},
+    {"description": "Dissoudre la levure et le miel dans l'eau tiède, puis ajouter au mélange de farine."},
+    {"description": "Pétrir la pâte jusqu'à ce qu'elle soit lisse et élastique, environ 10 minutes."},
+    {"description": "Laisser lever la pâte pendant 1 à 2 heures jusqu'à ce qu'elle double de volume."},
+    {"description": "Façonner la pâte en une boule et laisser lever encore 1 heure."},
+    {"description": "Préchauffer le four à 220°C (425°F)."},
+    {"description": "Faire des incisions sur le dessus de la tourte et cuire pendant 40 à 45 minutes jusqu'à ce qu'elle soit dorée."}
+  ]
+}

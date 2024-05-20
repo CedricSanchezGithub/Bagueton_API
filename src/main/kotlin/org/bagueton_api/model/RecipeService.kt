@@ -87,24 +87,16 @@ data class StepsEntity(
     override fun equals(other: Any?): Boolean {
         return other is StepsEntity && id != null && id == other.id
     }
-
     override fun hashCode(): Int = id?.hashCode() ?: 0
 }
 
 // Repository pour accéder aux opérations de base de données des recettes.
 @Repository interface RecipeEntityRepository : JpaRepository<RecipeEntity, String>
-@Repository interface ImagesEntityRepository : JpaRepository<RecipeEntity, String>
-@Repository interface IngredientsEntityRepository : JpaRepository<RecipeEntity, String>
-@Repository interface StepsEntityRepository : JpaRepository<RecipeEntity, String>
-
 
 
 // Service gérant la logique métier de la création de recettes.
 @Service
-class RecipeService( val recipeRepository: RecipeEntityRepository,
-                     val ingredientsRepository: IngredientsEntityRepository,
-                     val stepsRepository: StepsEntityRepository,
-                     val imagesRepository: ImagesEntityRepository) {
+class RecipeService( val recipeRepository: RecipeEntityRepository) {
 
 
 
@@ -160,23 +152,22 @@ class RecipeService( val recipeRepository: RecipeEntityRepository,
             throw Exception("Recette non trouvée avec l'ID: $id")
         }
     }
+    // Met à jour la recette via son id
+    fun updateRecipe(id: String, updatedRecipe: RecipeEntity) {
+        val recipeToUpdateOptional = recipeRepository.findById(id)
+        if (recipeToUpdateOptional.isEmpty) {
+            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
+        }
+
+        val recipeToUpdate = recipeToUpdateOptional.get()
+
+        // Mise à jour des champs non nulls uniquement
+        updatedRecipe.title?.let { recipeToUpdate.title = it }
+
+        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
+    }
 }
 
-//    // Met à jour la recette via son id
-//    fun updateRecipe(id: Long, updatedRecipe: RecipeEntity) {
-//        val recipeToUpdateOptional = recipeRepository.findById(id)
-//        if (recipeToUpdateOptional.isEmpty) {
-//            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
-//        }
-//
-//        val recipeToUpdate = recipeToUpdateOptional.get()
-//
-//        // Mise à jour des champs non nulls uniquement
-//        updatedRecipe.title?.let { recipeToUpdate.title = it }
-//
-//        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
-//    }
-//}
 
 
 
