@@ -59,7 +59,7 @@ data class IngredientsEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: String? = null,
     var ingredient: String? = null,
-    var quantity: Int? = null,
+    var quantity: String? = null,
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipe_id")
     @JsonIgnore
