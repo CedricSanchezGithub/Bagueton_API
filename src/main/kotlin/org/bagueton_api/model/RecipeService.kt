@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 @Table(name = "recipes")
 data class RecipeEntity(
     @Id
+    // Génère automatiquement l'id avec une stratégie UUID
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: String? = null,
     var title: String? = null,
