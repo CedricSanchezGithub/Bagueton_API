@@ -27,4 +27,7 @@ class ContactsFormService(private val contactsFormRepository: ContactsFormReposi
     fun saveForm(form: ContactsFormEntity): ContactsFormEntity {
         return contactsFormRepository.save(form)
     }
+    fun readAllForms(): List<ContactsFormEntity> {
+        return contactsFormRepository.findAll()
+    }
 }
