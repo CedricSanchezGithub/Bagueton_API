@@ -100,7 +100,6 @@ data class StepsEntity(
 class RecipeService( val recipeRepository: RecipeEntityRepository) {
 
 
-
     @Transactional
     fun saveRecipe(recipe: RecipeEntity): RecipeEntity {
         val newRecipe = RecipeEntity()
@@ -136,7 +135,6 @@ class RecipeService( val recipeRepository: RecipeEntityRepository) {
     }
 
 
-
     // Permet de vérifier qu'une id (donc une recette) existe
     fun existsById(id: String): Boolean = recipeRepository.existsById(id)
 
@@ -144,7 +142,7 @@ class RecipeService( val recipeRepository: RecipeEntityRepository) {
     fun findAllRecipes(): MutableList<RecipeEntity> = recipeRepository.findAll()
 
 
-// Supprime la recette via son id, renvoie un booléen indiquant si la suppression a été effectuée.
+    // Supprime la recette via son id, renvoie un booléen indiquant si la suppression a été effectuée.
     fun deleteRecipeById(id: String) {
         // Vérifie si la recette existe avant de tenter de la supprimer
         if (recipeRepository.existsById(id)) {
@@ -153,23 +151,49 @@ class RecipeService( val recipeRepository: RecipeEntityRepository) {
             throw Exception("Recette non trouvée avec l'ID: $id")
         }
     }
-    // Met à jour la recette via son id
-    fun updateRecipe(id: String, updatedRecipe: RecipeEntity) {
-        val recipeToUpdateOptional = recipeRepository.findById(id)
-        if (recipeToUpdateOptional.isEmpty) {
-            throw Exception("Aucune recette trouvée avec l'ID spécifié.") // Consider using a custom exception
-        }
 
-        val recipeToUpdate = recipeToUpdateOptional.get()
+    // Méthode mise à jour de la recette via son id
+    @Transactional
+    fun updateRecipe(id: String, updatedRecipe: RecipeEntity) {
+        val recipeToUpdate = recipeRepository.findById(id).orElseThrow {
+            Exception("Aucune recette trouvée avec l'ID spécifié.")
+        }
 
         // Mise à jour des champs non nulls uniquement
         updatedRecipe.title?.let { recipeToUpdate.title = it }
 
-        recipeRepository.save(recipeToUpdate) // Sauvegarde des modifications
+        // Mise à jour des images
+        val updatedImages = updatedRecipe.images.map { image ->
+            ImagesEntity(
+                url = image.url,
+                recipe = recipeToUpdate
+            )
+        }.toMutableSet()
+        recipeToUpdate.images = updatedImages
+
+        // Mise à jour des ingrédients
+        val updatedIngredients = updatedRecipe.ingredients.map { ingredient ->
+            IngredientsEntity(
+                ingredient = ingredient.ingredient,
+                quantity = ingredient.quantity,
+                recipe = recipeToUpdate
+            )
+        }.toMutableSet()
+        recipeToUpdate.ingredients = updatedIngredients
+
+        // Mise à jour des étapes
+        val updatedSteps = updatedRecipe.steps.map { step ->
+            StepsEntity(
+                description = step.description,
+                recipe = recipeToUpdate
+            )
+        }.toMutableSet()
+        recipeToUpdate.steps = updatedSteps
+
+        // Sauvegarde des modifications
+        recipeRepository.save(recipeToUpdate)
     }
 }
-
-
 
 
 //    // Crée une recette avec un nomme, des étapes et des ingrédients

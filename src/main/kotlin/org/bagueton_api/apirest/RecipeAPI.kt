@@ -15,7 +15,7 @@ class RecipeAPI (val recipeService: RecipeService) {
 
     // Endpoint pour créer une nouvelle recette. Les données de la recette sont reçues dans le corps de la requête.
 
-    @PostMapping("/create")
+    @PostMapping("/createrecipe")
     fun createRecipe(@RequestBody recipe: RecipeEntity): ResponseEntity<RecipeEntity> {
         return ResponseEntity.ok(recipeService.saveRecipe(recipe))
     }
@@ -29,7 +29,7 @@ class RecipeAPI (val recipeService: RecipeService) {
 
     // Endpoint pour supprimer une recette précise
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/deleterecipe/{id}")
     fun deleteRecipe(@PathVariable id: String): ResponseEntity<String> {
         return try {
             recipeService.deleteRecipeById(id)
@@ -38,16 +38,22 @@ class RecipeAPI (val recipeService: RecipeService) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message ?: "Erreur lors de la suppression de la recette")
         }
     }
-// Endpoint pour modifier une recette. Les nouvelles données de la recette sont reçues dans le corps de la requête.
-@PatchMapping("/updaterecipe/{id}")
-fun updateRecipe(@PathVariable id: String, @RequestBody recipe: RecipeEntity) : ResponseEntity<Any> {
-    if (!recipeService.existsById(id)) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune recette trouvée pour l'ID spécifié.")
+    // Endpoint pour modifier une recette. Les nouvelles données de la recette sont reçues dans le corps de la requête.
+    @PatchMapping("/updaterecipe/{id}")
+    fun updateRecipe(@PathVariable id: String, @RequestBody recipe: RecipeEntity): ResponseEntity<Any> {
+        return try {
+            // Vérifie si la recette existe
+            if (!recipeService.existsById(id)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucune recette trouvée pour l'ID spécifié.")
+            }
+            // Appel du service pour mettre à jour partiellement ou complètement la recette
+            val updatedRecipe = recipeService.updateRecipe(id, recipe)
+            ResponseEntity.ok(updatedRecipe)
+        } catch (e: Exception) {
+            // Gestion des exceptions
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de la recette : ${e.message}")
+        }
     }
-    // Appel du service pour mettre à jour partiellement ou completement la recette
-    recipeService.updateRecipe(id, recipe)
-    return ResponseEntity.ok("Recette '${recipe.title}' mise à jour avec succès.")
-}
 }
 
 
