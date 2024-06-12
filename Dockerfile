@@ -17,7 +17,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copier le fichier JAR généré depuis l'étape de build
-COPY --from=build /app/build/libs/Bagueton_API.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # Exécuter l'application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
