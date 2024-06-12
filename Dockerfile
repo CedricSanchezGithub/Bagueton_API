@@ -1,5 +1,5 @@
 # Utiliser une image de base compatible avec ARM
-FROM adoptopenjdk:17-jdk-hotspot-bionic AS build
+FROM eclipse-temurin:17-jdk-jammy AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 RUN ./gradlew bootJar
 
 # Utiliser une nouvelle image de base pour exécuter l'application
-FROM adoptopenjdk:17-jdk-hotspot-bionic
+FROM eclipse-temurin:17-jdk-jammy
 
 # Définir le répertoire de travail
 WORKDIR /app
