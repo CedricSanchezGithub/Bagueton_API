@@ -29,7 +29,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     //Permet à JAVA de se connecter à une base SQL
-
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
