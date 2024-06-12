@@ -1,5 +1,5 @@
-# Utiliser une image de base openjdk pour construire le projet
-FROM openjdk:17-jdk-slim AS build
+# Utiliser une image de base compatible avec ARM
+FROM adoptopenjdk:17-jdk-hotspot-bionic AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -10,8 +10,8 @@ COPY . .
 # Construire le fichier JAR
 RUN ./gradlew bootJar
 
-# Utiliser une nouvelle image de base openjdk pour exécuter l'application
-FROM openjdk:17-jdk-slim
+# Utiliser une nouvelle image de base pour exécuter l'application
+FROM adoptopenjdk:17-jdk-hotspot-bionic
 
 # Définir le répertoire de travail
 WORKDIR /app
