@@ -17,3 +17,4 @@ Bagueton API est la seconde partie de mon projet d'étude "Bagueton" servant de 
 - **Backend** : Kotlin avec Spring Boot pour la logique serveur et l'accès aux données.
 - **Base de données** : Utilisation de JPA (Java Persistence API) pour la gestion des entités et l'interaction avec la base de données MySQL.
 - **Frontend** : Application Android [disponible ici](https://github.com/CedricSanchezGithub/Bagueton_v1).
+
