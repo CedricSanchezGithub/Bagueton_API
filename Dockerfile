@@ -1,29 +1,28 @@
-# Utiliser une image de base compatible avec ARM
-FROM adoptopenjdk:17-jdk-hotspot-bionic AS build
+# Utiliser une image de base compatible ARM
+FROM arm32v7/adoptopenjdk:17-jdk-hotspot-bionic AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Installer les fichiers de politique JCE illimités
-RUN apt-get update && apt-get install -y wget \
-    && wget -O /tmp/jce_policy-8.zip https://www.oracle.com/java/technologies/javase-jce8-downloads.html \
-    && unzip -j -o /tmp/jce_policy-8.zip *.jar -d /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security \
-    && rm /tmp/jce_policy-8.zip
+# Copier les fichiers Gradle et le fichier de configuration
+COPY gradle /app/gradle
+COPY build.gradle /app/
+COPY settings.gradle /app/
 
-# Copier les fichiers de projet dans le répertoire de travail
-COPY . .
+# Télécharger les dépendances sans les réinstaller à chaque build
+RUN ./gradlew downloadDependencies
+
+# Copier le reste des fichiers du projet
+COPY . /app
 
 # Construire le fichier JAR
 RUN ./gradlew bootJar
 
 # Utiliser une nouvelle image de base pour exécuter l'application
-FROM adoptopenjdk:17-jdk-hotspot-bionic
-
-# Définir le répertoire de travail
-WORKDIR /app
+FROM arm32v7/adoptopenjdk:17-jdk-hotspot-bionic
 
 # Copier le fichier JAR généré depuis l'étape de build
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/Bagueton_API.jar app.jar
 
 # Exécuter l'application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
