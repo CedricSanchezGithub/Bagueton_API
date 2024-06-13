@@ -38,7 +38,7 @@ jobs:
         uses: docker/setup-buildx-action@v1  # Configure Docker Buildx pour supporter les builds multi-architecture
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1  # Se connecte à Docker Hub
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}  # Utilise le nom d'utilisateur Docker Hub stocké dans les secrets
           password: ${{ secrets.DOCKER_PASSWORD }}  # Utilise le mot de passe Docker Hub stocké dans les secrets
