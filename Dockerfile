@@ -1,28 +1,23 @@
-# Utiliser une image de base compatible ARM
-FROM arm32v7/adoptopenjdk:17-jdk-hotspot-bionic AS build
+# Utiliser une image de base compatible ARM et AMD64
+FROM eclipse-temurin:17-jdk AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers Gradle et le fichier de configuration
-COPY gradle /app/gradle
-COPY build.gradle /app/
-COPY settings.gradle /app/
-
-# Télécharger les dépendances sans les réinstaller à chaque build
-RUN ./gradlew downloadDependencies
-
-# Copier le reste des fichiers du projet
-COPY . /app
+# Copier les fichiers de projet dans le répertoire de travail
+COPY . .
 
 # Construire le fichier JAR
 RUN ./gradlew bootJar
 
 # Utiliser une nouvelle image de base pour exécuter l'application
-FROM arm32v7/adoptopenjdk:17-jdk-hotspot-bionic
+FROM eclipse-temurin:17-jdk
+
+# Définir le répertoire de travail
+WORKDIR /app
 
 # Copier le fichier JAR généré depuis l'étape de build
-COPY --from=build /app/build/libs/Bagueton_API.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # Exécuter l'application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
