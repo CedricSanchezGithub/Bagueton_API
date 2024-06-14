@@ -39,7 +39,7 @@ dependencies {
     implementation("org.mindrot:jbcrypt:+")
 
     //Permet de charger ma base de données
-    implementation ("mysql:mysql-connector-java:8.0.19")
+    implementation ("mysql:mysql-connector-java:8.0.28")
 
 
 }
