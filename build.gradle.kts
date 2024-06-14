@@ -28,6 +28,9 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+    //Permet d'ajouter des annotations personnalisé au lancement du serveur
+    implementation ("org.springframework.boot:spring-boot-starter-logging")
+
     //Permet à JAVA de se connecter à une base SQL
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
