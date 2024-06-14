@@ -1,5 +1,5 @@
-# Utiliser une image de base compatible avec ARM
-FROM eclipse-temurin:17-jdk-jammy AS build
+# Utiliser une image de base compatible ARM et AMD64
+FROM eclipse-temurin:17-jdk AS build
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 RUN ./gradlew bootJar
 
 # Utiliser une nouvelle image de base pour exécuter l'application
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk
 
 # Définir le répertoire de travail
 WORKDIR /app
