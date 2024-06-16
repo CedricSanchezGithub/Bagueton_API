@@ -1,4 +1,5 @@
-# Utiliser une image de base compatible ARM et AMD64
+# Utiliser une image de base compatible ARM et AMD64 
+# Nécéssaire pour l'architecture Raspberry
 FROM eclipse-temurin:17-jdk AS build
 
 # Définir le répertoire de travail
