@@ -10,8 +10,8 @@ Bagueton API est la seconde partie de mon projet d'étude "Bagueton" servant de 
 
 - **Création de recettes** : Les utilisateurs peuvent créer des recettes en fournissant un titre, une option d'image, une liste d'ingrédients, et des étapes de préparation.
 - **Liste de recettes** : Les utilisateurs peuvent consulter toutes les recettes disponibles dans l'application.
-- **Recettes favorites** : Les utilisateurs peuvent marquer des recettes comme favorites.
-
+- **Mise à jour de recette** : Les utilisateurs peuvent mettre à jour leurs recette, modifier les étapes, les ingrédients..
+- **Supression de leurs recette** : Les utilisateurs peuvent supprimer une recette s'il le veulent.
 ## Technologies Utilisées
 
 - **Backend** : Kotlin avec Spring Boot pour la logique serveur et l'accès aux données.
