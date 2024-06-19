@@ -31,6 +31,8 @@ dependencies {
     //Permet d'ajouter des annotations personnalisé au lancement du serveur
     implementation ("org.springframework.boot:spring-boot-starter-logging")
 
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
     //Permet à JAVA de se connecter à une base SQL
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -41,7 +43,9 @@ dependencies {
     //Permet de charger ma base de données
     implementation ("mysql:mysql-connector-java:8.0.28")
 
-
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {

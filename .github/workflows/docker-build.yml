@@ -24,7 +24,8 @@ jobs:  # Définition des jobs
         uses: actions/cache@v2  # Action pour mettre en cache des dépendances
         with:  # Paramètres du cache
           path: ~/.gradle/caches  # Chemin vers le cache Gradle
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}  # Clé du cache basée sur le système d'exploitation et les fichiers Gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          # Clé du cache basée sur le système d'exploitation et les fichiers Gradle
           restore-keys: |  # Clés de restauration si la clé principale n'est pas trouvée
             ${{ runner.os }}-gradle-
 
@@ -49,4 +50,6 @@ jobs:  # Définition des jobs
           context: .  # Contexte de construction Docker (le répertoire courant)
           push: true  # Indique que l'image doit être poussée vers le registre Docker
           platforms: linux/amd64,linux/arm64  # Plateformes cibles pour l'image Docker
-          tags: cedsanc/bagueton-api:latest  # Tags de l'image Docker
+          tags: |
+            cedsanc/bagueton-api:latest
+            cedsanc/bagueton-api:${{ github.run_number }}-${{ github.sha }}
