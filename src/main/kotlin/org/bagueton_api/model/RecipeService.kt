@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 
 
 // Fetch Lazy passé en EAGER pour tenter de régler le probleme de serialisation
-// @JsonIgnore permet de régler le probleme de serialisation
-
+// @JsonIgnore aussi, les function equals évitent les doublons et hashCode
+// Le problème de serialisation est survenu lors de l'implémentation des clés primaires/étrangères
 @Entity
 @Table(name = "recipes")
 data class RecipeEntity(
@@ -32,6 +32,9 @@ data class RecipeEntity(
 
     override fun hashCode(): Int = id?.hashCode() ?: 0
 }
+// L'implémentation de equals et hashCode dans les entités JPA assure que les objets sont comparés de manière cohérente
+// et permet un fonctionnement correct des collections et des mécanismes internes de JPA.
+// Cela évite également les bugs subtils liés à la comparaison d'objets et à la gestion des collections.
 
 @Entity
 @Table(name = "images")

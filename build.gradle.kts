@@ -31,6 +31,8 @@ dependencies {
     //Permet d'ajouter des annotations personnalisé au lancement du serveur
     implementation ("org.springframework.boot:spring-boot-starter-logging")
 
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
     //Permet à JAVA de se connecter à une base SQL
     //JPA Framework Java qui génère du SQL
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
