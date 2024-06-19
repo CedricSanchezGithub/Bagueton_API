@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class WebSecurityConfig(private val userDetailsService: UserDetailsService) {
+class WebSecurityConfig {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -32,5 +32,9 @@ class WebSecurityConfig(private val userDetailsService: UserDetailsService) {
 
         return http.build()
     }
-}
 
+}
+@Bean
+fun userDetailsService(userRepository: UserRepository): UserDetailsService {
+    return UserDetailsServiceImpl(userRepository)
+}

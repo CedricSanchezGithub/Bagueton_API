@@ -43,7 +43,9 @@ dependencies {
     //Permet de charger ma base de données
     implementation ("mysql:mysql-connector-java:8.0.28")
 
-
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {

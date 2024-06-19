@@ -1,31 +1,38 @@
-import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.*
+package org.bagueton_api.usermanagement
 
-@RestController
-@RequestMapping("/api/auth")
-class AuthController(
-    private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
-) {
+import jakarta.persistence.*
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Service
+import org.springframework.security.core.userdetails.User
 
-    @PostMapping("/register")
-    fun register(@RequestBody user: User): String {
-        if (user.username?.let { userRepository.findByUsername(it) } != null) {
-            return "Username is already taken!"
-        }
+@Entity
+@Table(name = "users")
+data class ApplicationUser(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+    val username: String? = null,
+    val password: String? = null,
+    val role: String? = null,
+)
 
-        val newUser = User(
-            username = user.username,
-            password = passwordEncoder.encode(user.password),
-            role = "ROLE_USER"
+@Repository
+interface UserRepository : JpaRepository<ApplicationUser, Long> {
+    fun findByUsername(username: String): ApplicationUser?
+}
+
+@Service
+class UserDetailsServiceImpl(private val userRepository: UserRepository) : UserDetailsService {
+    override fun loadUserByUsername(username: String): User {
+        val user = userRepository.findByUsername(username)
+            ?: throw UsernameNotFoundException("User not found with username: $username")
+
+        return User(
+            user.username, user.password,
+            listOf(SimpleGrantedAuthority(user.role))
         )
-
-        userRepository.save(newUser)
-        return "User registered successfully"
-    }
-
-    @PostMapping("/login")
-    fun login(): String {
-        return "Login successful"
     }
 }
