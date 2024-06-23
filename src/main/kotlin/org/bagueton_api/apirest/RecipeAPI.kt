@@ -17,8 +17,13 @@ class RecipeAPI (val recipeService: RecipeService) {
     // Les données de la recette sont reçues dans le corps de la requête.
 
     @PostMapping("/createrecipe")
-    fun createRecipe(@RequestBody recipe: RecipeEntity): ResponseEntity<RecipeEntity> {
-        return ResponseEntity.ok(recipeService.saveRecipe(recipe))
+    fun createRecipe(@RequestBody recipe: RecipeEntity): ResponseEntity<Any> {
+        return try {
+            val savedRecipe = recipeService.saveRecipe(recipe)
+            ResponseEntity.ok(savedRecipe)
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Impossible de créer la recette ${e.message}")
+        }
     }
 
     // Endpoint pour récupérer toutes les recettes disponibles.

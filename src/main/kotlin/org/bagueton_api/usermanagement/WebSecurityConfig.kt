@@ -28,6 +28,7 @@ class WebSecurityConfig {
                     .requestMatchers("/bagueton/readrecipes").permitAll()
                     .requestMatchers("/bagueton/createrecipe").permitAll()
                     .requestMatchers("/bagueton/deleterecipe/**").permitAll()
+                    .requestMatchers("/bagueton/updaterecipe/**").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { formLogin -> formLogin.permitAll() }
