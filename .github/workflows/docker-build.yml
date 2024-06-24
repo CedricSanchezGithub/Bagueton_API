@@ -53,3 +53,4 @@ jobs:  # Définition des jobs
           tags: |
             cedsanc/bagueton-api:latest
             cedsanc/bagueton-api:${{ github.run_number }}-${{ github.sha }}
+          # permet d’avoir toujours les anciennes versions en réserve, au cas où le dernier build soit problématique
