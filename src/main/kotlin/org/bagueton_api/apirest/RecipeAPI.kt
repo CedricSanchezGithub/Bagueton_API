@@ -22,7 +22,8 @@ class RecipeAPI (val recipeService: RecipeService) {
             val savedRecipe = recipeService.saveRecipe(recipe)
             ResponseEntity.ok(savedRecipe)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Impossible de créer la recette ${e.message}")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Impossible de créer la recette ${e.message}")
         }
     }
 
