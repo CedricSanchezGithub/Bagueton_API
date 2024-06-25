@@ -10,7 +10,7 @@ class BaguetonApiApplication{
 
     @Bean
     fun init() = ApplicationRunner {
-        println("Mise à jour correctement effectuée 21/06/2024")
+        println("Mise à jour correctement effectuée 25/06/2024")
     }
 }
 
