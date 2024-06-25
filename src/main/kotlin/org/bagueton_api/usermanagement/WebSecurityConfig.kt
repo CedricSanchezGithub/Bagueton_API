@@ -26,14 +26,17 @@ class WebSecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { csrf -> csrf.disable() }
-            .cors { } // Enable CORS with default configuration
+            .cors { } // Permet d'afficher des données sur bagueton.cedricsanchez.fr
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/**").permitAll()
                     .requestMatchers("/bagueton/readrecipes").permitAll()
                     .requestMatchers("/bagueton/createrecipe").permitAll()
                     .requestMatchers("/bagueton/deleterecipe/**").permitAll()
                     .requestMatchers("/bagueton/updaterecipe/**").permitAll()
+                    .requestMatchers("/bagueton/readform").permitAll()
+                    .requestMatchers("/bagueton/form").permitAll()
                     .anyRequest().authenticated()
             }
             .formLogin { formLogin -> formLogin.permitAll() }

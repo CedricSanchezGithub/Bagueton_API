@@ -1,4 +1,4 @@
-package org.bagueton_api.model
+package org.bagueton_api.recipe
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
@@ -198,30 +198,4 @@ class RecipeService( val recipeRepository: RecipeEntityRepository) {
     }
 }
 
-
-//    // Crée une recette avec un nomme, des étapes et des ingrédients
-//    fun createRecipe(name: String, steps: String?, ingredients: String?) {
-//        if (name.isBlank()) {
-//            throw Exception("Le titre de la recette est obligatoire.")
-//        }
-//        // Création et sauvegarde de l'entité RecipeBean
-//        val recipe = RecipeBean(title = name, steps = steps, ingredients = ingredients)
-//        println("Sauvegarde de la recette suivante: ${recipe.title}")
-//        recipeRepository.save(recipe)
-//    }
-// Entité représentant un ingrédient avec son nom, quantité et unité.
-// @Column(length = 10000) garanti une longeur suffisante de la colonne.
-// Utile lors de migrations par exemple (mysql vers une autre bdd)
-//@Entity
-//@Table(name = "bagueton_recipe")
-//data class RecipeBean(
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    val id_recipe: Long? = null,
-//    var title: String? = null,
-//    var image: String? = "http://90.51.140.217:8081//logo.png",
-//    var ingredients: String? = "",
-//    @Column(length = 10000)
-//    var steps: String? = ""
-//)
 

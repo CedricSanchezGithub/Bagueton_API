@@ -1,7 +1,5 @@
-package org.bagueton_api.apirest
+package org.bagueton_api.recipe
 
-import org.bagueton_api.model.RecipeEntity
-import org.bagueton_api.model.RecipeService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
