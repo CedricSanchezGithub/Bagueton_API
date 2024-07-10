@@ -20,6 +20,8 @@ Bagueton API est la seconde partie de mon projet d'étude "Bagueton" servant de 
 - **Frontend** : Application Android [disponible ici](https://github.com/CedricSanchezGithub/Bagueton_v1).
 
 Docker compose a été utilisé pour le développement.
-Docker & Kubernetes ont été utilisés pour le déploiement CD/CI: l'API était disponible sur internet grâce à Kubernetes sur un Raspberry pi 4
+
+Docker & Kubernetes ont été utilisés pour le déploiement CD/CI. 
+l'API était disponible sur internet grâce à Kubernetes sur un Raspberry pi 4
 L'image Spring boot du serveur était mise à jour sur mon Raspberry grâce à un github workflow
 ![cd/ci](https://github.com/CedricSanchezGithub/Bagueton_API/assets/129597649/f9fbd595-e86f-4d11-a76d-3535f8418955)
