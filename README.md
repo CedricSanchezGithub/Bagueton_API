@@ -12,7 +12,12 @@ Bagueton API est la seconde partie de "Bagueton", projet d'étude pour l'obtenti
 - **Liste de recettes** : Les utilisateurs peuvent consulter toutes les recettes disponibles dans l'application.
 - **Mise à jour de recette** : Les utilisateurs peuvent mettre à jour leurs recettes, modifier les étapes, les ingrédients..
 - **Suppression de leurs recette** : Les utilisateurs peuvent supprimer une recette s'ils le veulent.
-  
+
+## Fonctionnalités en cours
+- **Gestion d'utilisateurs**
+- **Tests Unitaires**
+- **Tests d'Intégration**
+
 ## Technologies Utilisées
 
 - **Backend** : Kotlin avec Spring Boot pour la logique serveur et l'accès aux données.
@@ -23,5 +28,5 @@ Docker compose a été utilisé pour le développement.
 
 Docker & Kubernetes ont été utilisés pour le déploiement CD/CI. Développement effectué sur Linux Mint.
 l'API était mis en ligne grâce à Kubernetes sur un Raspberry pi 4.
-L'image Spring Boot du serveur était mise à jour sur mon Raspberry grâce à un github workflow
+L'image Spring Boot du serveur était mise à jour sur mon Raspberry grâce à un workflow GitHub & un Dockerfile (racine du projet)
 ![cd/ci](https://github.com/CedricSanchezGithub/Bagueton_API/assets/129597649/f9fbd595-e86f-4d11-a76d-3535f8418955)
